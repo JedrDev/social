@@ -1,12 +1,12 @@
 <template>
     <Head title="Forgot Password" />
 
-    <jet-authentication-card>
+    <authentication-card>
         <template #logo>
-            <jet-authentication-card-logo />
+            <authentication-card-logo />
         </template>
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-4 text-sm text-gray-600 mt-2">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
         </div>
 
@@ -28,14 +28,24 @@
                 </jet-button>
             </div>
         </form>
-    </jet-authentication-card>
+
+        <template #footer>
+            <div class="flex justify-center">
+                <spam class="text-sm text-gray-600 mr-2">Already registered?</spam>
+                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                    Log in
+                </Link>
+            </div>
+        </template>
+
+    </authentication-card>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import { Head } from '@inertiajs/inertia-vue3';
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+    import { Head,Link } from '@inertiajs/inertia-vue3';
+    import AuthenticationCard from '@/Components/AuthenticationCard.vue'
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetLabel from '@/Jetstream/Label.vue'
@@ -44,12 +54,13 @@
     export default defineComponent({
         components: {
             Head,
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
+            AuthenticationCard,
+            AuthenticationCardLogo,
             JetButton,
             JetInput,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            Link,
         },
 
         props: {

@@ -1,9 +1,9 @@
 <template>
     <Head title="Reset Password" />
 
-    <jet-authentication-card>
+    <authentication-card>
         <template #logo>
-            <jet-authentication-card-logo />
+            <authentication-card-logo />
         </template>
 
         <jet-validation-errors class="mb-4" />
@@ -30,14 +30,14 @@
                 </jet-button>
             </div>
         </form>
-    </jet-authentication-card>
+    </authentication-card>
 </template>
 
 <script>
     import { defineComponent } from 'vue';
     import { Head } from '@inertiajs/inertia-vue3';
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+    import AuthenticationCard from '@/Components/AuthenticationCardWithoutFootter.vue'
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetLabel from '@/Jetstream/Label.vue'
@@ -46,8 +46,8 @@
     export default defineComponent({
         components: {
             Head,
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
+            AuthenticationCard,
+            AuthenticationCardLogo,
             JetButton,
             JetInput,
             JetLabel,

@@ -1,17 +1,25 @@
 <template>
     <Head title="Register" />
 
-    <jet-authentication-card>
+    <authentication-card>
         <template #logo>
-            <jet-authentication-card-logo />
+            <authentication-card-logo />
         </template>
 
         <jet-validation-errors class="mb-4" />
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" id="register">
+            <p v-if="errors.length">
+                <jet-validation-errors :errors="errors" />
+            </p>
             <div>
                 <jet-label for="name" value="Name" />
                 <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
+            </div>
+
+            <div class="mt-4">
+                <jet-label for="nickname" value="Nickname" />
+                <jet-input id="nickname" type="text" class="mt-1 block w-full" v-model="form.nickname" required />
             </div>
 
             <div class="mt-4">
@@ -42,22 +50,27 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
-                </Link>
-
                 <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
                 </jet-button>
             </div>
         </form>
-    </jet-authentication-card>
+
+        <template #footer>
+            <div class="flex justify-center">
+                <spam class="text-sm text-gray-600 mr-2">Already registered?</spam>
+                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                    Log in
+                </Link>
+            </div>
+        </template>
+    </authentication-card>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+    import AuthenticationCard from '@/Components/AuthenticationCard.vue'
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetCheckbox from '@/Jetstream/Checkbox.vue'
@@ -65,11 +78,47 @@
     import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
     import { Head, Link } from '@inertiajs/inertia-vue3';
 
-    export default defineComponent({
+    export default {
+        components: {
+            AuthenticationCard,
+            AuthenticationCardLogo,
+            JetButton,
+            JetInput,
+            JetCheckbox,
+            JetLabel,
+            JetValidationErrors,
+            Head,
+            Link
+        },
+        data() {
+            return {
+                form: {
+                    name: null,
+                    nickname: null,
+                    email: null,
+                    password: null,
+                    password_confirmation: null,
+                    terms: false,
+                    processing: false,
+                },
+                errors: [],
+            };
+        },
+
+        methods: {
+            submit(){
+
+                this.$inertia.post(this.route('register'), this.form);
+
+            },
+
+        },
+    };
+   /* export default defineComponent({
         components: {
             Head,
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
+            AuthenticationCard,
+            AuthenticationCardLogo,
             JetButton,
             JetInput,
             JetCheckbox,
@@ -82,6 +131,7 @@
             return {
                 form: this.$inertia.form({
                     name: '',
+                    //snickname: '',
                     email: '',
                     password: '',
                     password_confirmation: '',
@@ -91,11 +141,30 @@
         },
 
         methods: {
+            checkForm: function(e) {
+                if (this.form.name && this.form.nickname && this.form.email && this.form.password && this.form.password_confirmation) {
+                    this.submit()
+                }
+                this.errors = [];
+                if(this.form.password !== this.form.password_confirmation) {
+                    this.$validator.errors.add('password_confirmation', 'The password confirmation does not match.')
+                }
+                if (this.form.password.length < 6) {
+                    this.$validator.errors.add('password', 'The password must be at least 6 characters.')
+                }
+                if (this.form.password.length > 255) {
+                    this.$validator.errors.add('password', 'The password may not be greater than 255 characters.')
+                }
+                if (this.form.nickname === '') {
+                    this.$validator.errors.add('nickname', 'The nickname field is required.')
+                }
+                e.preventDefault();
+            },
             submit() {
                 this.form.post(this.route('register'), {
                     onFinish: () => this.form.reset('password', 'password_confirmation'),
                 })
             }
         }
-    })
+    })*/
 </script>

@@ -1,9 +1,9 @@
 <template>
     <Head title="Secure Area" />
 
-    <jet-authentication-card>
+    <authentication-card>
         <template #logo>
-            <jet-authentication-card-logo />
+            <authentication-card-logo />
         </template>
 
         <div class="mb-4 text-sm text-gray-600">
@@ -24,14 +24,22 @@
                 </jet-button>
             </div>
         </form>
-    </jet-authentication-card>
+        <template #footer>
+            <div class="flex justify-center">
+                <spam class="text-sm text-gray-600 mr-2">Already registered?</spam>
+                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                    Log in
+                </Link>
+            </div>
+        </template>
+    </authentication-card>
 </template>
 
 <script>
     import { defineComponent } from 'vue';
     import { Head } from '@inertiajs/inertia-vue3';
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+    import JetAuthenticationCard from '@/Components/AuthenticationCardWithoutFootter.vue'
+    import JetAuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetLabel from '@/Jetstream/Label.vue'
