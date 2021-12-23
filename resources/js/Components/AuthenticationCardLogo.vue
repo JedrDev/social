@@ -1,6 +1,6 @@
 <template>
     <Link :href="'/'">
-        <img src="../../images/logo.png" alt="logo dimejedr" style="width:100px;height:100px">
+        <img src="../../images/logo.png" alt="logo dimejedr" style="width:60px;height:60px" >
     </Link>
 </template>
 

@@ -13,16 +13,51 @@
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <jet-application-mark class="block h-9 w-auto" />
+                                    <authentication-card-logo />
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </jet-nav-link>
+                            <div class="ml-3 relative mt-3">
+                                <dropdown align="right" width="100" overflow="overflow-y-auto" maxheight="300">
+                                    <template #trigger>
+                                        <div class="relative mx-auto text-gray-600">
+                                            <input v-model="search" @keyup="userSearch" class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-full text-sm focus:outline-none"
+                                            type="text" placeholder="Search">
+                                            <span class="absolute right-0 top-0 mt-3 mr-6">
+                                                <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+                                                    viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
+                                                    width="512px" height="512px">
+                                                    <path
+                                                    d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </template>
+
+                                    <template #content >
+                                        <div v-if="users.length >0">
+                                            <a  v-for="(user,index) in users" :key="index" href="" class="flex items-center py-2 px-3 hover:bg-gray-100 my-auto">
+                                                <img  class="rounded-full w-9 h-9 object-cover" :src="user.profile_photo_url" :alt="user.name">
+                                                <div class="ml-2">
+                                                    <span class="block font-bold text-gray-700 text-sm">{{user.nickname}}</span>
+                                                    <span class="text-sm font-light text-gray-400">{{user.name}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div v-if="search == ''" class="flex items-center">
+                                            <span class="text-sm font-light text-gray-400">Search someone</span>
+                                        </div>
+                                        <div v-if="!userExists" class="flex items-center">
+                                            <span class="text-sm font-light text-gray-400">User doesnt exist</span>
+                                        </div>
+
+                                    </template>
+                                </dropdown>
                             </div>
+
+
+                            <!--End of search input-->
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -143,7 +178,7 @@
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
                         <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                            Principal
                         </jet-responsive-nav-link>
                     </div>
 
@@ -233,13 +268,16 @@
 
 <script>
     import { defineComponent } from 'vue'
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
     import JetApplicationMark from '@/Jetstream/ApplicationMark.vue'
     import JetBanner from '@/Jetstream/Banner.vue'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import Dropdown from '@/Components/Dropdown.vue'
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import JetNavLink from '@/Jetstream/NavLink.vue'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
     import { Head, Link } from '@inertiajs/inertia-vue3';
+    import axios from 'axios'
 
     export default defineComponent({
         props: {
@@ -247,6 +285,7 @@
         },
 
         components: {
+            AuthenticationCardLogo,
             Head,
             JetApplicationMark,
             JetBanner,
@@ -255,11 +294,15 @@
             JetNavLink,
             JetResponsiveNavLink,
             Link,
+            Dropdown,
         },
 
         data() {
             return {
                 showingNavigationDropdown: false,
+                users:[],
+                search: '',
+                userExists: true,
             }
         },
 
@@ -275,6 +318,23 @@
             logout() {
                 this.$inertia.post(route('logout'));
             },
+            async userSearch (){
+                if (this.search != '') {
+                    await axios.get('/search/' + this.search)
+                    .then(response => {
+                        if(response.data.length > 0 && Array.isArray(response.data)){
+                            this.userExists = true;
+                            this.users = response.data;
+                        } else {
+                            this.userExists = false;
+                            this.users = [];
+                        }
+                    })
+                }else{
+                    this.userExists = true;
+                    this.users = [];
+                }
+            },
         }
-    })
+    });
 </script>
