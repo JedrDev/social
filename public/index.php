@@ -3,6 +3,18 @@
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
+/*
+    Usar con balanceador de carga de rutas
+
+if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'http') || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
+    //redireccionar a https
+    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $redirect);
+    exit();
+
+}*/
+
 define('LARAVEL_START', microtime(true));
 
 /*

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
@@ -28,5 +29,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/search/{query}',[SearchController::class,'search'])->name('search');
+
+    Route::post('/posts', [PostController::class, 'createPost'])->name('posts.create');
 
 });

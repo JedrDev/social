@@ -19,7 +19,7 @@
                     class="absolute z-50 mt-2 rounded-md shadow-lg"
                     :class="[widthClass, alignmentClasses,overflow]"
                     style="display: none;"
-                    :style="'max-height: ' + maxheight + 'px;'"
+                    :style="'max-height: '+maxheight+'px;'"
                     @click="open = false">
                 <div class="rounded-md ring-1 ring-black ring-opacity-5" :class="contentClasses">
                     <slot name="content"></slot>
@@ -52,7 +52,7 @@ export default defineComponent({
         let open = ref(false)
 
         const closeOnEscape = (e) => {
-            if (open.value && e.key === 'Escape') {
+            if (open.value && e.keyCode === 27) {
                 open.value = false
             }
         }

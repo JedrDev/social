@@ -19,7 +19,7 @@
                                             <template #trigger>
                                                 <div class="relative mx-auto text-gray-600">
                                                     <input v-model="search" @keyup="userSearch" class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-full text-sm focus:outline-none"
-                                                    type="text" placeholder="Search">
+                                                    type="search" placeholder="Search">
                                                     <span class="absolute right-0 top-0 mt-3 mr-6">
                                                         <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                                             xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
@@ -176,13 +176,6 @@
         },
 
         methods: {
-            switchToTeam(team) {
-                this.$inertia.put(route('current-team.update'), {
-                    'team_id': team.id
-                }, {
-                    preserveState: false
-                })
-            },
 
             logout() {
                 this.$inertia.post(route('logout'));
@@ -192,16 +185,16 @@
                     await axios.get('/search/' + this.search)
                     .then(response => {
                         if(response.data.length > 0 && Array.isArray(response.data)){
-                            this.userExists = true;
-                            this.users = response.data;
+                            this.userExists = true
+                            this.users = response.data
                         } else {
-                            this.userExists = false;
-                            this.users = [];
+                            this.userExists = false
+                            this.users = []
                         }
                     })
                 }else{
-                    this.userExists = true;
-                    this.users = [];
+
+                    this.users = []
                 }
             },
         }
