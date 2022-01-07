@@ -23,12 +23,13 @@ class Post extends Model
 
     protected $columnFile = 'image_patch';
 
-
     protected $filePathSave = 'posts-images';
+
+
 
     // contadores para los likes, comentarios y si likeo o no
 
-    public $appends = ['countComments','countLikes','isLiked'];
+    public $appends = ['countComments','countLikes','isLiked','photo_url'];
 
     public function getCountCommentsAttribute()
     {
@@ -81,6 +82,25 @@ class Post extends Model
             'comments',
             'likes',
         ])->find($post->id);
+
+    }
+
+    // funcion para obtener los posts
+    public static function getPosts($id,$profile=null){
+
+        $query = (new static)->with([
+            'user',
+            'comments' => function($query){
+                $query->with('user:id,name,nickname,profile_image_patch');
+            },
+            'likes',
+        ])->where('user_id', $id);
+        if(is_null($profile)){
+            $query = $query->orWhereIn('user_id', Follower::select('user_id')->where('follower_id', $id)->get());
+        }
+
+       return $query->orderBy('created_at','desc')
+        ->get();
 
     }
 

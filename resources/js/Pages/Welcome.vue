@@ -5,7 +5,10 @@
             <div class="flex w-full items-center justify-center mx-auto">
                 <button @click="changeStateCreatePost" class="w-96 mb-5 text-center bg-[#0ED3CF] rounded-full text-white py-2 outline-none focus:outline-none hover:bg-cyan-600">Add post</button>
             </div>
-            <post-component></post-component>
+            <div v-if="posts.length > 0">
+                <post-component v-for="(post,index) in posts" :key="index" :post="post"></post-component>
+            </div>
+            <div v-else class="flex w-full items-center justify-center mx-auto text-3x1 text-center">Ops.. there any posts, why not follow you someone or publish something?</div>
         </div>
     </div>
     <modal-component :show="showModal" @close="changeStateCreatePost" >
@@ -63,6 +66,12 @@
             }
         },
         methods: {
+            async getPosts() {
+                await axios.get('/posts')
+                .then(response => {
+                    this.posts = response.data
+                })
+            },
             changeStateCreatePost() {
                 this.showModal = !this.showModal
             },
@@ -101,6 +110,9 @@
                 this.url = null
 
             }
+        },
+        created() {
+            this.getPosts()
         },
     })
 </script>

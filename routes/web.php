@@ -32,4 +32,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::post('/posts', [PostController::class, 'createPost'])->name('posts.create');
 
+    Route::get('/posts', [PostController::class, 'getPosts'])->name('posts.get');
+
 });

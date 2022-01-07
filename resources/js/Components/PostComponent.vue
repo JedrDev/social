@@ -3,11 +3,10 @@
         <div class="border w-5/6 bg-white my-3 rounded-2xl p-4 shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-80">
             <div class="flex items-center	justify-between">
                 <div class="gap-3.5	flex items-center ">
-                    <img src="https://images.unsplash.com/photo-1617077644557-64be144aa306?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" class="object-cover bg-yellow-500 rounded-full w-10 h-10 cursor-pointer" />
+                    <img :src="post.user.profile_photo_url" :alt="post.user.name" class="h-12 w-12 rounded-full object-cover"/>
                     <div class="flex flex-col">
-                        <b class="mb-2 capitalize cursor-pointer">sofia müller</b>
-                        <time datetime="06-08-21" class="text-gray-400 text-xs">06 August at 09.15 PM
-                        </time>
+                        <b class="mb-1 capitalize cursor-pointer">{{post.user.nickname}}</b>
+                        <time class="text-gray-400 text-xs">{{getDifferenceTime(post.created_at)}}</time>
                     </div>
                 </div>
                 <div class="bg-gray-100	rounded-full h-3.5 flex	items-center justify-center cursor-pointer">
@@ -18,11 +17,12 @@
                     </svg>
                 </div>
             </div>
-            <div class="whitespace-pre-wrap mt-7">Hello guys 🥰</div>
+            <div class="whitespace-pre-wrap mt-7">{{post.description}}</div>
             <div class="mt-5 flex gap-2	 justify-center border-b pb-4 flex-wrap	">
-                <img src="https://images.unsplash.com/photo-1610147323479-a7fb11ffd5dd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1534&q=80" class="bg-red-500 w-1/3 object-cover  flex-auto" alt="photo">
+                <img :src="post.photo_url" class="bg-red-500 w-1/3 object-cover flex-auto" :alt="post.description">
             </div>
                 <div class=" h-16 border-b  flex items-center justify-around	">
+                    <!--COMENTARIOS-->
                     <div class="flex items-center	gap-3	">
                         <svg width="20px" height="19px" viewBox="0 0 20 19" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" class="cursor-pointer">
@@ -50,18 +50,28 @@
                                 </g>
                             </g>
                         </svg>
-                        <div class="text-sm	">10 Comments</div>
+                        <div class="text-sm	">{{post.countComments}} Comments</div>
                     </div>
+                    <!--fin COMENTARIOS-->
+                    <!--LIKES-->
                     <div class="flex items-center	gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 cursor-pointer" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <div class="text-sm">5 Likes</div>
-                    </div>
+                        <div v-if="post.isliked">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div v-else>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 26 26" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
 
+                        <div class="text-sm">{{post.countLikes}} Likes</div>
+                    </div>
+                    <!--FIN LIKS-->
+                    <!--funcion para guardar post-->
                     <div class="flex items-center	gap-3">
                         <svg width="17px" height="22px" viewBox="0 0 17 22" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -91,57 +101,50 @@
                         </svg>
                         <div class="text-sm">Saved</div>
                     </div>
+                    <!-- fin funcion para guardar post-->
                 </div>
-                <div >
-                    <div class="pt-1">
-                        <div class="text-sm mb-2 flex flex-start items-center">
+                <div class="pt-1">
+                    <div v-if="post.comments.length > 0" >
+                        <div v-for="(comment, index) in post.comments" :key="index" class="text-sm mb-2 flex flex-start items-center">
                             <div>
                                 <a href="#" class="cursor-pointer flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
                                     <img class="h-8 w-8 rounded-full object-cover"
-                                    src="https://images.pexels.com/photos/1450082/pexels-photo-1450082.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                                    alt="user" />
+                                        :src="comment.user.profile_photo_url"
+                                        :alt="comment.user.nickname" />
                                 </a>
                             </div>
                             <p class="font-bold ml-2">
-                                <a class="cursor-pointer">Joshua:</a>
+                                <a class="cursor-pointer">{{comment.user.nickname}}:</a>
                                 <span class="text-gray-700 font-medium ml-1">
-                                    Good post
+                                    {{comment.comment}}
                                 </span>
-                            </p>
+                                </p>
                         </div>
-                    </div>
-                    <div class="text-sm mb-2 flex flex-start items-center">
-                        <div>
-                            <a href="#" class="cursor-pointer flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
-                                <img class="h-8 w-8 rounded-full object-cover"
-                                src="https://images.pexels.com/photos/3861456/pexels-photo-3861456.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
-                                alt="user" />
-                            </a>
-                        </div>
-                        <p class="font-bold ml-2">
-                            <a class="cursor-pointer">Kesha:</a>
-                            <span class="text-gray-700 font-medium ml-1">
-                                This is amazing
-                            </span>
-                        </p>
                     </div>
                 </div>
                 <div class="flex items-center justify-between mt-4">
-                    <img src="https://images.unsplash.com/photo-1595152452543-e5fc28ebc2b8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"  class="bg-yellow-500 rounded-full w-10 h-10 object-cover border cursor-pointer">
-                    <div class="flex items-center	justify-between	 bg-gray-50 h-11 w-11/12 border rounded-2xl	 focus:border-gray-800 overflow-hidden">
-                        <input type="text" class="h-full w-full bg-gray-50 border-transparent rounded-2xl focus:border-gray-800" placeholder="Write your comment..." name="comment"/>
+                    <img :src="$page.props.user.profile_photo_url" class="h-8 w-8 rounded-full object-cover">
+                    <div class="flex items-center justify-between bg-gray-50 h-11 w-11/12 focus:w-9/12 ml-6 border rounded-2xl focus:border-gray-800 overflow-hidden">
+                        <input v-model="textComment" class="w-full h-full resize-none outline-none appearance-none pl-1" aria-label="Write your comment..." placeholder="Write your comment..." name="comment"/>
                     </div>
+                    <button v-if="textComment.length > 0" class="mb-1 ml-2 focus:outline-none border-none bg-transparent text-blue-600">Post</button>
                 </div>
         </div>
     </div>
 </template>
 <script>
+    import moment from 'moment'
     export default {
         data() {
             return {
-
+                textComment: '',
             }
         },
         props: ['post'],
+        methods:{
+            getDifferenceTime(time){
+                return moment(time).fromNow(true)
+            },
+        }
     }
 </script>

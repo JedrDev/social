@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -36,6 +37,12 @@ class PostController extends Controller
             DB::rollBack();
             return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    public function getPosts()
+    {
+        $posts = $this->post->getPosts(Auth::id());
+        return $posts;
     }
 
 }

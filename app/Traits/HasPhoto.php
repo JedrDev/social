@@ -62,8 +62,9 @@ trait HasPhoto
      */
     public function getPhotoUrlAttribute()
     {
-        return $this->columnFile
-                    ? Storage::disk($this->photoDisk())->url($this->columnFile)
+
+        return $this->image_patch
+                    ? Storage::disk($this->photoDisk())->url($this->image_patch)
                     : $this->defaultPhotoUrl();
     }
 

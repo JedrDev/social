@@ -3,6 +3,10 @@ require('./bootstrap');
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
+import moment from 'moment-timezone'
+
+
+moment.tz.setDefault('America/Mexico_City');
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
