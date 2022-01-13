@@ -19,7 +19,7 @@
             </div>
             <div class="whitespace-pre-wrap mt-7">{{post.description}}</div>
             <div class="mt-5 flex gap-2	 justify-center border-b pb-4 flex-wrap	">
-                <img :src="post.photo_url" class="bg-red-500 w-1/3 object-cover flex-auto" :alt="post.description">
+                <img @click="setPost" :src="post.photo_url" class="bg-red-500 w-1/3 object-cover flex-auto" :alt="post.description">
             </div>
                 <div class=" h-16 border-b  flex items-center justify-around	">
                     <!--COMENTARIOS-->
@@ -63,7 +63,7 @@
                             </svg>
                         </div>
                         <div v-else>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 26 26" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer text-[#92929D]" fill="none" viewBox="0 0 26 26" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                         </div>
@@ -104,7 +104,7 @@
                     <!-- fin funcion para guardar post-->
                 </div>
                 <div class="pt-1">
-                    <div v-if="post.comments.length > 0" >
+                   <!-- <div v-if="post.comments.length > 0" >
                         <div v-for="(comment, index) in post.comments" :key="index" class="text-sm mb-2 flex flex-start items-center">
                             <div>
                                 <a href="#" class="cursor-pointer flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
@@ -120,7 +120,7 @@
                                 </span>
                                 </p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <img :src="$page.props.user.profile_photo_url" class="h-8 w-8 rounded-full object-cover">
@@ -144,6 +144,9 @@
         methods:{
             getDifferenceTime(time){
                 return moment(time).fromNow(true)
+            },
+            setPost(){
+                this.$emit('post', this.post)
             },
         }
     }

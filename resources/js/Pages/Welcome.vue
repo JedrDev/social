@@ -6,11 +6,14 @@
                 <button @click="changeStateCreatePost" class="w-96 mb-5 text-center bg-[#0ED3CF] rounded-full text-white py-2 outline-none focus:outline-none hover:bg-cyan-600">Add post</button>
             </div>
             <div v-if="posts.length > 0">
-                <post-component v-for="(post,index) in posts" :key="index" :post="post"></post-component>
+                <post-component v-for="(post,index) in posts" :key="index" :post="post" @post="setPost"></post-component>
             </div>
             <div v-else class="flex w-full items-center justify-center mx-auto text-3x1 text-center">Ops.. there any posts, why not follow you someone or publish something?</div>
         </div>
     </div>
+
+    <modal-post :show="show" :post="post" @show="changeStateModalPost"></modal-post>
+
     <modal-component :show="showModal" @close="changeStateCreatePost" >
         <div class="p-5">
             <div class="">
@@ -45,6 +48,7 @@
     import { Head, Link } from '@inertiajs/inertia-vue3';
     import PostComponent from '@/Components/PostComponent.vue';
     import ModalComponent from '@/Jetstream/Modal.vue';
+    import ModalPost from '@/Components/ModalPost.vue';
 
 
 
@@ -54,14 +58,17 @@
             Link,
             PostComponent,
             ModalComponent,
+            ModalPost,
         },
         data() {
             return {
                 showModal: false,
+                show: false,
                 url: null,
                 image: null,
                 text: '',
                 posts: [],
+                post: [],
                 error: null,
             }
         },
@@ -74,6 +81,9 @@
             },
             changeStateCreatePost() {
                 this.showModal = !this.showModal
+            },
+            changeStateModalPost() {
+                this.show = !this.show
             },
             fileChange(e){
                 let file = e.target.files[0]
@@ -109,7 +119,11 @@
                 this.image = null
                 this.url = null
 
-            }
+            },
+            setPost(post){
+                this.show = !this.show
+                this.post = post
+            },
         },
         created() {
             this.getPosts()
